@@ -1,0 +1,16 @@
+id,strasse,hausnummer,plz,ort,kunde_id
+1,Hauptstraße,12,76133,Karlsruhe,1
+20,Bahnhofstraße,5,76131,Karlsruhe,20
+30,Gartenweg,8,76135,Karlsruhe,30
+40,Lindenstraße,3,76137,Karlsruhe,40
+50,Rosenweg,17,76139,Karlsruhe,50
+60,Kirchgasse,2,76133,Karlsruhe,60
+70,Parkstraße,9,76131,Karlsruhe,70
+80,Bergstraße,21,76135,Karlsruhe,80
+90,Hauptstraße,12,76133,Karlsruhe,90
+100,Bahnhofstraße,5,76131,Karlsruhe,100
+110,Gartenweg,8,76135,Karlsruhe,110
+120,Waldweg,4,76137,Karlsruhe,120
+130,Schillerstraße,6,76139,Karlsruhe,130
+140,Goethestraße,11,76133,Karlsruhe,140
+150,Mozartstraße,7,76131,Karlsruhe,150
