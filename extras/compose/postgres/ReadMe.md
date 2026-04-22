@@ -294,12 +294,12 @@ Voraussetzung ist, dass die DB geöffnet ist und z.B. eine einfache Query ausgef
 Im Kontextmenü für eine DB den Menüpunkt _Mit dieser Datenbank chatten_ anklicken.
 Danach im Chat-Fenster Fragen stellen und ggf. nachhaken, z.B.:
 
-- Wie kann ich Bücher mit einem "a" im Titel selektieren?
-- Ich möchte die Daten der Bücher und nicht den Untertitel.
-- Jetzt fehlt aber der Buchtitel.
+- Wie kann ich Kunden mit einem "a" im Nachnamen selektieren?
+- Ich möchte die Daten der Kunden und nicht die Adresse.
+- Jetzt fehlt aber die E-Mail.
 - Wie kann ich diese Daten als CSV exportieren?
 
 **BEACHTE**:
 
-- _Bücher_ mit deutschem Umlaut als Plural der DB-Tabelle `kunde`.
+- _Kunden_ als Plural der DB-Tabelle `kunde`.
 - Es wird auch erkannt, dass `ILIKE` anstelle von `=` benutzt werden soll.

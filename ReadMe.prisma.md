@@ -320,13 +320,13 @@ Validierungsfehler überprüft werden.
 
 Nachdem die Models generiert wurden, empfiehlt es sich das Schema anzupassen, z.B.:
 
-- PascalCase für die Model-Namen, z.B. `B`uch statt `b`uch.
+- PascalCase für die Model-Namen, z.B. `Kunde` statt `kunde`.
   - Bei jedem umbenannten Model muss am Ende `@@map` ergänzt werden, z.B. @@map("kunde").
-- camelCase für die Field-Namen, z.B. `buchId` statt `buch_id`.
-  - Bei jedem umbenannten Field muss `@map` ergänzt werden, z.B. @map("buch_id").
+- camelCase für die Field-Namen, z.B. `kundeId` statt `kunde_id`.
+  - Bei jedem umbenannten Field muss `@map` ergänzt werden, z.B. `@map("kunde_id")`.
   - Bei jeder `@relation` muss bei `fields` der geänderte Name eingetragen werden.
 - Bei 1:N-Beziehungen sollte ein Plural für die Field-Namen verwendet werden,
-  z.B. abbildung`en` statt abbildung
+  z.B. `bestellungen` statt `bestellung`.
 - Bei Fields, die für den Zeitstempel der letzten Änderung verwendet werden,
   sollte `@updatedAt` ergänzt werden.
 - Bei den Models sollte am Ende `@@schema` ergänzt werden, damit die späteren
