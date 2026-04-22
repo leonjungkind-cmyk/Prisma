@@ -247,7 +247,7 @@ gesetzt sein:
 
 ```shell
     # Windows:
-    $env:DATABASE_URL='postgresql://kunde:p@localhost/kunde?schema=kunde&connection_limit=10&sslnegotiation=direct?sslcert=src/config/resources/postgresql/server.crt'
+    $env:DATABASE_URL='postgresql://kunde:p@localhost:5432/kunde?schema=kunde&connection_limit=10&sslnegotiation=direct&sslcert=src/config/resources/postgresql/server.crt'
 
     # macOS:
     DATABASE_URL='postgresql://kunde:p@localhost/kunde?schema=kunde&connection_limit=10&sslnegotiation=direct?sslcert=src/config/resources/postgresql/server.crt'
