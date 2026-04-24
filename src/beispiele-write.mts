@@ -1,23 +1,3 @@
-// Copyright (C) 2025 - present Juergen Zimmermann, Hochschule Karlsruhe
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-// Aufruf:   bun i
-//           bun --env-file=.env prisma generate
-//
-//           bun --env-file=.env src\beispiele-write.mts
-
 import { PrismaPg } from '@prisma/adapter-pg';
 import process from 'node:process';
 import { styleText } from 'node:util';
@@ -44,8 +24,8 @@ const log: (Prisma.LogLevel | Prisma.LogDefinition)[] = [
     'error',
 ];
 
-// PrismaClient fuer DB "buch" (siehe Umgebungsvariable DATABASE_URL in ".env")
-// d.h. mit PostgreSQL-User "buch" und Schema "buch"
+// PrismaClient fuer DB "kunde" (siehe Umgebungsvariable DATABASE_URL in ".env")
+// d.h. mit PostgreSQL-User "kunde" und Schema "kunde"
 const prisma = new PrismaClient({
     adapter,
     errorFormat: 'pretty',
@@ -58,86 +38,71 @@ prisma.$on('query', (e) => {
     console.log(message);
 });
 
-const neuesBuch: Prisma.BuchCreateInput = {
-    // Spaltentyp "text"
-    isbn: '978-0-007-00644-1',
-    // Spaltentyp "integer"
-    rating: 1,
-    // Spaltentyp "enum('HARDCOVER', ...)"
-    art: 'HARDCOVER',
-    // number -> Spaltentyp "numeric"
-    preis: 99.99,
-    rabatt: 0.0123,
-    // Spaltentyp "boolean"
-    lieferbar: true,
-    // Datum im Format ISO8601 fuer Spaltentyp "date"
-    datum: '2025-02-28T00:00:00Z',
-    homepage: 'https://beispiele.prisma',
-    // Spaltentyp "jsonb"
-    schlagwoerter: ['JAVASCRIPT', 'TYPESCRIPT'],
+const neuerKunde: Prisma.KundeCreateInput = {
+    nachname: 'Mustermann',
+    email: 'max.mustermann@beispiel.de',
+    username: 'maxmustermann',
+    version: 0,
     // 1:1-Beziehung
-    titel: {
+    adresse: {
         create: {
-            titel: 'Beispiel',
-            untertitel: 'beispiel',
+            strasse: 'Musterstrasse',
+            hausnummer: '1',
+            plz: '76133',
+            ort: 'Karlsruhe',
         },
     },
     // 1:N-Beziehung
-    abbildungen: {
+    bestellungen: {
         create: [
             {
-                beschriftung: 'Abb. 1',
-                contentType: 'img/png',
+                produktname: 'Beispielprodukt',
+                menge: 1,
             },
         ],
     },
 };
-type BuchCreated = Prisma.BuchGetPayload<{
+type KundeCreated = Prisma.KundeGetPayload<{
     include: {
-        titel: true;
-        abbildungen: true;
+        adresse: true;
+        bestellungen: true;
     };
 }>;
 
-const geaendertesBuch: Prisma.BuchUpdateInput = {
+const geaenderterKunde: Prisma.KundeUpdateInput = {
     version: { increment: 1 },
-    rating: 5,
-    art: 'HARDCOVER',
-    preis: 3333,
-    rabatt: 0.033,
-    lieferbar: true,
-    // datum: '2025-03-03T00:00:00Z',
-    homepage: 'https://geaendert.put.rest',
-    schlagwoerter: ['JAVA'],
+    nachname: 'Geaendert',
+    email: 'geaendert@beispiel.de',
+    username: 'geaendert',
 };
-type BuchUpdated = Prisma.BuchGetPayload<{}>; // eslint-disable-line @typescript-eslint/no-empty-object-type
+type KundeUpdated = Prisma.KundeGetPayload<{}>; // eslint-disable-line @typescript-eslint/no-empty-object-type
 
-// Schreib-Operationen mit dem Model "Buch"
+// Schreib-Operationen mit dem Model "Kunde"
 try {
     await prisma.$connect();
     await prisma.$transaction(async (tx) => {
         // Neuer Datensatz mit generierter ID
-        const buchDb: BuchCreated = await tx.buch.create({
-            data: neuesBuch,
-            include: { titel: true, abbildungen: true },
+        const kundeDb: KundeCreated = await tx.kunde.create({
+            data: neuerKunde,
+            include: { adresse: true, bestellungen: true },
         });
         message = styleText(['black', 'bgWhite'], 'Generierte ID:');
-        console.log(`${message} ${buchDb.id}`);
+        console.log(`${message} ${kundeDb.id}`);
         console.log();
 
         // Version +1 wegen "Optimistic Locking" bzw. Vermeidung von "Lost Updates"
-        const buchUpdated: BuchUpdated = await tx.buch.update({
-            data: geaendertesBuch,
+        const kundeUpdated: KundeUpdated = await tx.kunde.update({
+            data: geaenderterKunde,
             where: { id: 30 },
         });
         // eslint-disable-next-line require-atomic-updates
         message = styleText(['black', 'bgWhite'], 'Aktualisierte Version:');
-        console.log(`${message} ${buchUpdated.version}`);
+        console.log(`${message} ${kundeUpdated.version}`);
         console.log();
 
         // https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/referential-actions#referential-action-defaults
         // https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/relation-mode
-        const geloescht = await tx.buch.delete({ where: { id: 70 } });
+        const geloescht = await tx.kunde.delete({ where: { id: 70 } });
         // eslint-disable-next-line require-atomic-updates
         message = styleText(['black', 'bgWhite'], 'Geloescht:');
         console.log(`${message} ${geloescht.id}`);

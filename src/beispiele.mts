@@ -1,30 +1,10 @@
-// Copyright (C) 2025 - present Juergen Zimmermann, Hochschule Karlsruhe
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-// Aufruf:  bun i
-//          bun --env-file=.env prisma generate
-//
-//          bun --env-file=.env src\beispiele.mts
-
-import process from 'node:process';
-import { styleText } from 'node:util';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { prismaQueryInsights } from '@prisma/sqlcommenter-query-insights';
+import process from 'node:process';
+import { styleText } from 'node:util';
 import {
     PrismaClient,
-    type Buch,
+    type Kunde,
     type Prisma,
 } from './generated/prisma/client.ts';
 
@@ -52,14 +32,14 @@ const log: (Prisma.LogLevel | Prisma.LogDefinition)[] = [
 ];
 
 // PrismaClient passend zur Umgebungsvariable DATABASE_URL in ".env"
-// d.h. mit PostgreSQL-User "buch" und Schema "buch"
+// d.h. mit PostgreSQL-User "kunde" und Schema "kunde"
 const prisma = new PrismaClient({
     // shorthand property
     adapter,
     errorFormat: 'pretty',
     log,
     // Kommentar zu Log-Ausgabe:
-    // /*prismaQuery='Buch.findMany%3A...
+    // /*prismaQuery='Kunde.findMany%3A...
     comments: [prismaQueryInsights()],
 });
 prisma.$on('query', (e) => {
@@ -69,68 +49,65 @@ prisma.$on('query', (e) => {
     console.log(message);
 });
 
-export type BuchMitTitelUndAbbildungen = Prisma.BuchGetPayload<{
+export type KundeMitAdresseUndBestellungen = Prisma.KundeGetPayload<{
     include: {
-        titel: true;
-        abbildungen: true;
+        adresse: true;
+        bestellungen: true;
     };
 }>;
 
-// Operationen mit dem Model "Buch"
+// Operationen mit dem Model "Kunde"
 try {
     await prisma.$connect();
 
     // Das Resultat ist null, falls kein Datensatz gefunden
-    const buch: Buch | null = await prisma.buch.findUnique({
+    const kunde: Kunde | null = await prisma.kunde.findUnique({
         where: { id: 1 },
     });
-    message = styleText(['black', 'bgWhite'], 'buch');
-    console.log(`${message} = %j`, buch);
+    message = styleText(['black', 'bgWhite'], 'kunde');
+    console.log(`${message} = %j`, kunde);
     console.log();
 
     // SELECT *
-    // FROM   buch
-    // JOIN   titel ON buch.id = titel.buch_id
-    // WHERE  titel.titel LIKE "%n%"
-    const buecher: BuchMitTitelUndAbbildungen[] = await prisma.buch.findMany({
+    // FROM   kunde
+    // JOIN   adresse ON kunde.id = adresse.kunde_id
+    // WHERE  kunde.nachname LIKE "%n%"
+    const kunden: KundeMitAdresseUndBestellungen[] = await prisma.kunde.findMany({
         where: {
-            titel: {
-                // https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting#filter-on-relations
-                titel: {
-                    // https://www.prisma.io/docs/orm/reference/prisma-client-reference#filter-conditions-and-operators
-                    contains: 'n',
-                },
+            nachname: {
+                // https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting#filter-conditions-and-operators
+                contains: 'n',
             },
         },
-        // Fetch-Join mit Titel und Abbildungen
+        // Fetch-Join mit Adresse und Bestellungen
         include: {
-            titel: true,
-            abbildungen: true,
+            adresse: true,
+            bestellungen: true,
         },
     });
-    message = styleText(['black', 'bgWhite'], 'buecherMitAbb');
-    console.log(`${message} = %j`, buecher);
+    message = styleText(['black', 'bgWhite'], 'kundenMitBestellungen');
+    console.log(`${message} = %j`, kunden);
     console.log();
 
     // higher-order function und arrow function
-    const schlagwoerter = buecher.map((b) => b.schlagwoerter);
-    message = styleText(['black', 'bgWhite'], 'schlagwoerter');
-    console.log(`${message} = %j`, schlagwoerter);
+    const bestellungen = kunden.map((k) => k.bestellungen);
+    message = styleText(['black', 'bgWhite'], 'bestellungen');
+    console.log(`${message} = %j`, bestellungen);
     console.log();
 
     // union type
-    const titel = buecher.map((b) => b.titel?.titel);
-    message = styleText(['black', 'bgWhite'], 'titel');
-    console.log(`${message} = %j`, titel);
+    const adressen = kunden.map((k) => k.adresse?.ort);
+    message = styleText(['black', 'bgWhite'], 'adressen');
+    console.log(`${message} = %j`, adressen);
     console.log();
 
     // Pagination
-    const buecherPage2: Buch[] = await prisma.buch.findMany({
+    const kundenPage2: Kunde[] = await prisma.kunde.findMany({
         skip: 5,
         take: 5,
     });
-    message = styleText(['black', 'bgWhite'], 'buecherPage2');
-    console.log(`${message} = %j`, buecherPage2);
+    message = styleText(['black', 'bgWhite'], 'kundenPage2');
+    console.log(`${message} = %j`, kundenPage2);
     console.log();
 } finally {
     await prisma.$disconnect();
@@ -142,17 +119,15 @@ const adapterAdmin = new PrismaPg({
 });
 const prismaAdmin = new PrismaClient({ adapter: adapterAdmin });
 try {
-    const buecherAdmin: Buch[] = await prismaAdmin.buch.findMany({
+    const kundenAdmin: Kunde[] = await prismaAdmin.kunde.findMany({
         where: {
-            titel: {
-                titel: {
-                    contains: 'n',
-                },
+            nachname: {
+                contains: 'n',
             },
         },
     });
-    message = styleText(['black', 'bgWhite'], 'buecherAdmin');
-    console.log(`${message} = ${JSON.stringify(buecherAdmin)}`);
+    message = styleText(['black', 'bgWhite'], 'kundenAdmin');
+    console.log(`${message} = ${JSON.stringify(kundenAdmin)}`);
 } finally {
     await prismaAdmin.$disconnect();
 }
