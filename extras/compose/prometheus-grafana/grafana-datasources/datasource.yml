@@ -1,4 +1,4 @@
-# Copyright (C) 2020 - present Juergen Zimmermann, Florian Rusch
+# Copyright (C) 2023 - present Juergen Zimmermann, Hochschule Karlsruhe
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,21 +11,16 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-default: true
+apiVersion: 1
 
-# line-length
-MD013: false
-
-# no-blanks-blockquote
-MD028: false
-
-# no-inline-html
-MD033: false
-
-# no-bare-urls
-MD034: false
-
-# table-column-style
-MD060: false
+# https://grafana.com/docs/grafana/latest/administration/provisioning
+datasources:
+  - name: Prometheus
+    type: prometheus
+    # Anfragen an Prometheus erfolgen vom Dashboard im Webbrowser ueber den Grafana-Server als *Proxy* an den Server "kunde"
+    access: proxy
+    url: http://prometheus:9090 # DevSkim: ignore DS137138
+    # Default-Datenquelle fuer Grafana
+    isDefault: true

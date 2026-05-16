@@ -36,8 +36,10 @@
   - [Datenbank mit PostgreSQL](#datenbank-mit-postgresql)
   - [Umgebungsvariable](#umgebungsvariable)
 - [Installation](#installation)
+  - [Node und npm](#node-und-npm)
   - [Bun installieren](#bun-installieren)
   - [Bun überprüfen](#bun-überprüfen)
+  - [Bun ggf. deinstallieren](#bun-ggf-deinstallieren)
   - [Software-Pakete in node_modules mit Bun installieren](#software-pakete-in-node_modules-mit-bun-installieren)
   - [Indirekt genutzte Packages](#indirekt-genutzte-packages)
   - [Meta-Informationen zu einem Package](#meta-informationen-zu-einem-package)
@@ -155,14 +157,14 @@ Bei _Systemvariable_ (**nicht** bei _Benutzervariable_) folgende
 Umgebungsvariable mit den jeweiligen Werten eintragen. Die Werte für `PATH`
 _vor_ Pfaden mit _Leerzeichen_ eintragen.
 
-| Name der Umgebungsvariable | Wert der Umgebungsvariable                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `GIT_HOME`                 | `C:\Zimmermann\git`                                                                                     |
-| `PATH`                     | `C:\Zimmermann\node`;`%GIT_HOME%\cmd`;`%GIT_HOME%\bin`;`C:\Zimmermann\k6`;`C:\Zimmermann\Graphviz\bin`; |
+| Name der Umgebungsvariable | Wert der Umgebungsvariable                                                                                                       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `GIT_HOME`                 | `C:\Zimmermann\git`                                                                                                              |
+| `PATH`                     | `%USERPROFILE%\.bun\bin`;`C:\Zimmermann\node`;`%GIT_HOME%\cmd`;`%GIT_HOME%\bin`;`C:\Zimmermann\k6`;`C:\Zimmermann\Graphviz\bin`; |
 
 ## Installation
 
-### Bun installieren
+### Node und npm
 
 Wenn bereits _Node_ und _npm_ installiert sind, kann damit _Bun_ installiert werden:
 
@@ -182,19 +184,23 @@ Bei Linux und macOS in einer Shell die nachfolgenden Kommandos eingeben:
     npm --version
 ```
 
-Ohne _npm_ zu verwenden, kann _Bun_ übrigens folgendermaßen installieren.
+### Bun installieren
+
 Bei Windows erfolgt die Installation im Pfad `${env:USERPROFILE}\.bun\bin`,
-welcher auch in der Umgebungsvariablen `PATH` ergänzt wird. Bei macOS und Linux
-ist es analog `$HOME/.bun/bin`. Außerdem wird bei Windows dann auch _Bun_ in
-_Installierte Apps_ eingetragen.
+welcher ggf. als `%USERPROFILE%\.bun\bin` in der Umgebungsvariablen `PATH`
+eingetragen werden muss (s.o.). Bei macOS und Linux ist es analog `$HOME/.bun/bin`.
+Außerdem wird bei Windows _Bun_ auch in _Installierte Apps_ eingetragen.
 
 ```shell
     # Windows:
-    powershell -c "irm bun.sh/install.ps1|iex"
+    irm bun.sh/install.ps1 | iex
 
     # macOS / Linux:
     curl -fsSL https://bun.sh/install | bash
 ```
+
+`irm` ist ein Alias für `Invoke-RestMethod`, was durch `Get-Alias irm` überprüft
+werden kann. Ebenso ist `iex` ein Alias für `Invoke-Expression`.
 
 ### Bun überprüfen
 
@@ -209,6 +215,22 @@ Zur Überprüfung kann man die nachfolgenden Kommandos eingeben:
     which bun
     bun --version
 ```
+
+### Bun ggf. deinstallieren
+
+Bun wird folgendermaßen deinstalliert:
+
+```shell
+    # Windows:
+    Remove-Item  -Recurse -Force "$env:USERPROFILE\.bun"
+
+    # macOS / Linux:
+    rm -rf $HOME/.bun
+```
+
+Danach muss `%USERPROFILE%\.bun` bzw. `$HOME/.bun` aus der Umgebungsvariable `PATH`
+entfernt werden. Außerdem sollte bei Windows _Bun_ aus _Installierte Apps_
+entfernt werden.
 
 ### Software-Pakete in node_modules mit Bun installieren
 
@@ -247,19 +269,19 @@ gesetzt sein:
 
 ```shell
     # Windows:
-    $env:DATABASE_URL='postgresql://kunde:p@localhost:5432/kunde?schema=kunde&connection_limit=10&sslnegotiation=direct&sslcert=src/config/resources/postgresql/server.crt'
+    $env:DATABASE_URL='postgresql://buch:p@localhost/buch?schema=buch&connection_limit=10&sslnegotiation=direct?sslcert=src/config/resources/postgresql/server.crt'
 
     # macOS:
-    DATABASE_URL='postgresql://kunde:p@localhost/kunde?schema=kunde&connection_limit=10&sslnegotiation=direct?sslcert=src/config/resources/postgresql/server.crt'
+    DATABASE_URL='postgresql://buch:p@localhost/buch?schema=buch&connection_limit=10&sslnegotiation=direct?sslcert=src/config/resources/postgresql/server.crt'
 ```
 
 Dadurch ist folgendes konfiguriert:
 
-- Benutzername: `kunde`
+- Benutzername: `buch`
 - Passwort: `p`
 - DB-Host: `localhost`
-- DB-Name: `kunde`
-- Schema: `kunde`
+- DB-Name: `buch`
+- Schema: `buch`
 - Größe des Verbindungs-Pools: max. `10` Verbindungen
 - SSL: durch die Zertifikatsdatei `server.crt` im Verzeichnis `src\config\resources\postgresql`
 
@@ -320,27 +342,27 @@ Validierungsfehler überprüft werden.
 
 Nachdem die Models generiert wurden, empfiehlt es sich das Schema anzupassen, z.B.:
 
-- PascalCase für die Model-Namen, z.B. `Kunde` statt `kunde`.
-  - Bei jedem umbenannten Model muss am Ende `@@map` ergänzt werden, z.B. @@map("kunde").
-- camelCase für die Field-Namen, z.B. `kundeId` statt `kunde_id`.
-  - Bei jedem umbenannten Field muss `@map` ergänzt werden, z.B. `@map("kunde_id")`.
+- PascalCase für die Model-Namen, z.B. `B`uch statt `b`uch.
+  - Bei jedem umbenannten Model muss am Ende `@@map` ergänzt werden, z.B. @@map("buch").
+- camelCase für die Field-Namen, z.B. `buchId` statt `buch_id`.
+  - Bei jedem umbenannten Field muss `@map` ergänzt werden, z.B. @map("buch_id").
   - Bei jeder `@relation` muss bei `fields` der geänderte Name eingetragen werden.
 - Bei 1:N-Beziehungen sollte ein Plural für die Field-Namen verwendet werden,
-  z.B. `bestellungen` statt `bestellung`.
+  z.B. abbildung`en` statt abbildung
 - Bei Fields, die für den Zeitstempel der letzten Änderung verwendet werden,
   sollte `@updatedAt` ergänzt werden.
 - Bei den Models sollte am Ende `@@schema` ergänzt werden, damit die späteren
   JavaScript-Objekte auf Datensätze in Tabellen im gewünschten Schema abgebildet
   werden.
 
-Außerdem sollte in `prisma\schema.prisma` der eigene Schema-Name (hier: `kunde`)
+Außerdem sollte in `prisma\schema.prisma` der eigene Schema-Name (hier: `buch`)
 eingetragen werden:
 
 ```prisma
   ...
   datasource db {
     provider = "postgresql"
-    schemas  = ["kunde"]
+    schemas  = ["buch"]
   }
 ```
 
@@ -371,14 +393,14 @@ const prisma = new PrismaClient();
 
 try {
   await prisma.$connect();
-  const buecher = await prisma.kunde.findMany();
+  const buecher = await prisma.buch.findMany();
   console.log(`buecher=${JSON.stringify(buecher)}`);
 } finally {
   await prisma.$disconnect();
 }
 ```
 
-Der obige Prisma-Client `prisma.kunde` greift auf die Tabelle `kunde` in der
+Der obige Prisma-Client `prisma.buch` greift auf die Tabelle `buch` in der
 konfigurierten PostgreSQL-DB zu. Dabei werden die npm-Packages _@prisma/client_
 und _@prisma/adapter-pg_ verwendet, die in `package.json` als `dependency`
 eingetragen sind. @prisma/adapter-pg wiederum verwendet intern das npm-Package
@@ -426,14 +448,14 @@ und auch auf Sicherheitslücken überprüft werden:
 Während die Erweiterung _PostgreSQL_ für VS Code nur Daten anzeigen kann, kann
 _Prisma Studio_ auch Daten einfügen, ändern und löschen. Der Aufruf mit _Bun_
 lautet folgendermaßen, wobei man an der Oberfläche von Prisma Studio noch das
-Schema `kunde` auswählen muss, um die Tabellen anzuzeigen:
+Schema `buch` auswählen muss, um die Tabellen anzuzeigen:
 
 ```shell
     # Windows:
-    $env:DATABASE_URL='postgresql://kunde:p@localhost/kunde'
+    $env:DATABASE_URL='postgresql://buch:p@localhost/buch'
 
     # macOS / Linux:
-    DATABASE_URL='postgresql://kunde:p@localhost/kunde'
+    DATABASE_URL='postgresql://buch:p@localhost/buch'
 
     bunx prisma studio
 ```

@@ -4,14 +4,12 @@
     "*.csv": "csv (semicolon)"
   },
   "material-icon-theme.activeIconPack": "nest",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.useFlatConfig": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "oxc.fmt.configPath": "oxfmt.config.ts",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.sortImports": "explicit",
     "source.removeUnusedImports": "explicit",
-    "source.fixAll.eslint": "explicit",
     "source.addMissingImports.ts": "explicit",
     "source.removeUnused.ts": "explicit"
   },
@@ -34,9 +32,9 @@
     "titleBar.inactiveBackground": "#21573299",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "npm.packageManager": "pnpm",
+  "npm.packageManager": "bun",
   "peacock.color": "#215732",
-  "typescript.experimental.useTsgo": true,
+  "js/ts.experimental.useTsgo": true,
   "asciidoc.antora.showEnableAntoraPrompt": false,
   "vitest.nodeEnv": {
     "NODE_TLS_REJECT_UNAUTHORIZED": "0"

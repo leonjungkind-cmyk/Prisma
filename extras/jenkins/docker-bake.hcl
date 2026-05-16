@@ -1,4 +1,4 @@
-# Copyright (C) 2020 - present Juergen Zimmermann, Florian Rusch
+# Copyright (C) 2024 - present Juergen Zimmermann, Hochschule Karlsruhe
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,19 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-default: true
+# Aufruf:   docker buildx bake
 
-# line-length
-MD013: false
+# Dateiformate: HCL ( = HashiCorp Configuration Language), YAML (wie in Docker Compose) oder JSON
+# HCL ist maechtiger und flexibler als YAML oder JSON.
 
-# no-blanks-blockquote
-MD028: false
+# https://docs.docker.com/build/bake/introduction
+# https://docs.docker.com/build/bake/reference
 
-# no-inline-html
-MD033: false
-
-# no-bare-urls
-MD034: false
-
-# table-column-style
-MD060: false
+target "default" {
+  tags = ["docker.io/juergenzimmermann/jenkins:2026.4.1"]
+  #dockerfile = "Dockerfile"
+}
