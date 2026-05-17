@@ -72,19 +72,20 @@ try {
     // FROM   kunde
     // JOIN   adresse ON kunde.id = adresse.kunde_id
     // WHERE  kunde.nachname LIKE "%n%"
-    const kunden: KundeMitAdresseUndBestellungen[] = await prisma.kunde.findMany({
-        where: {
-            nachname: {
-                // https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting#filter-conditions-and-operators
-                contains: 'n',
+    const kunden: KundeMitAdresseUndBestellungen[] =
+        await prisma.kunde.findMany({
+            where: {
+                nachname: {
+                    // https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting#filter-conditions-and-operators
+                    contains: 'n',
+                },
             },
-        },
-        // Fetch-Join mit Adresse und Bestellungen
-        include: {
-            adresse: true,
-            bestellungen: true,
-        },
-    });
+            // Fetch-Join mit Adresse und Bestellungen
+            include: {
+                adresse: true,
+                bestellungen: true,
+            },
+        });
     message = styleText(['black', 'bgWhite'], 'kundenMitBestellungen');
     console.log(`${message} = %j`, kunden);
     console.log();
