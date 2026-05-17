@@ -43,8 +43,8 @@
     // "strict": true, // strictest: alle "strict"-Optionen aktivieren
 
     "allowImportingTsExtensions": true,
-    "erasableSyntaxOnly": true // NICHT: enum, parameter properties in constructor(), namespace, import aliases
-
+    "erasableSyntaxOnly": true, // NICHT: enum, parameter properties in constructor(), namespace, import aliases
+    "types": ["bun"]
     // "useUnknownInCatchVariables": true // unknown als default-Typ bei catch-Klauseln, default bei strict
   }
 }
