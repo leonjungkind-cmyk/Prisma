@@ -96,8 +96,7 @@ sowie die Berechtigung zum Ändern vom Linux-Owner und von der Linux-Group (s.u.
 ```shell
     # Windows
     cd extras\compose\keycloak
-    docker run -v kc_tls:/opt/keycloak/tls -v ./tls:/tmp/tls:ro `
-      --rm -it -u 0:0 --entrypoint '' dhi.io/keycloak:26.6.1-debian13 /bin/bash
+    docker run -v kc_tls:/opt/keycloak/tls -v ./tls:/tmp/tls:ro `--rm -it -u 0:0 --entrypoint '' dhi.io/keycloak:26.5.5-debian13 /bin/bash
 
     # macOS/Linux
     cd extras/compose/keycloak
