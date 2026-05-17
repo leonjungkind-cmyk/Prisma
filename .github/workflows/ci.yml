@@ -21,6 +21,9 @@ jobs:
       - name: Dependencies installieren
         run: bun install
 
+      - name: Prisma Client generieren
+        run: bun --env-file=.env prisma generate
+
       - name: TypeScript prüfen
         run: bun run tsc
 
