@@ -22,7 +22,9 @@ jobs:
         run: bun install
 
       - name: Prisma Client generieren
-        run: bun --env-file=.env prisma generate
+        run: bun prisma generate
+        env:
+          DATABASE_URL: postgresql://kunde:p@localhost:5432/kunde?schema=kunde
 
       - name: TypeScript prüfen
         run: bun run tsc
