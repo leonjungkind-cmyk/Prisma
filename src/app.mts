@@ -9,10 +9,15 @@ import { compress } from 'hono/compress';
 import { cors } from 'hono/cors';
 import { corsOptions } from './config/cors.mts';
 import { createMiddleware } from 'hono/factory';
+import { env } from './config/env.mts';
+import { getLogger } from './logger/logger.mts';
 import { paths } from './config/paths.mts';
+import { router as devRouter } from './config/dev/dev-router.mts';
 import { router } from './kunde/router/kunde-router.mts';
 import { secureHeaders } from 'hono/secure-headers';
 import { showRoutes } from 'hono/dev';
+
+const INTERNAL_SERVER_ERROR = 500;
 
 export const app = new Hono();
 
@@ -29,6 +34,11 @@ app.use(secureHeaders(), cors(corsOptions), securityHeaders, compress());
 
 // Routen registrieren
 app.route(paths.rest, router);
+
+const { NODE_ENV } = env;
+if (NODE_ENV === 'development' || NODE_ENV === 'test') {
+    app.route(paths.dev, devRouter);
+}
 
 if (logger.isLevelEnabled('debug')) {
     showRoutes(app, { verbose: true });
@@ -51,5 +61,5 @@ app.onError((error, c) => {
 
     logger.error('Interner Fehler: %o', error);
     console.log(error.stack);
-    return c.body('Interner Fehler', 500);
+    return c.body('Interner Fehler', INTERNAL_SERVER_ERROR);
 });
