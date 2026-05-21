@@ -10,27 +10,46 @@ import { prismaClient } from '../../config/prisma-client.mts';
 
 type FindByIdParams = {
     readonly id: number;
+    readonly mitBestellungen?: boolean;
 };
 
 export type KundeMitAdresse = Prisma.KundeGetPayload<{
     include: { adresse: true };
 }>;
 
+export type KundeMitAdresseUndBestellungen = Prisma.KundeGetPayload<{
+    include: {
+        adresse: true;
+        bestellungen: true;
+    };
+}>;
+
 export class KundeService {
     static readonly ID_PATTERN = /^[1-9]\d{0,10}$/u;
 
     readonly #includeAdresse: KundeInclude = { adresse: true };
+    readonly #includeAdresseUndBestellungen: KundeInclude = {
+        adresse: true,
+        bestellungen: true,
+    };
 
     readonly #logger = getLogger(KundeService.name);
 
     // Einen Kunden anhand seiner ID laden
-    async findById({ id }: FindByIdParams): Promise<Readonly<KundeMitAdresse>> {
-        this.#logger.debug('findById: id=%d', id);
+    async findById({
+        id,
+        mitBestellungen,
+    }: FindByIdParams): Promise<Readonly<KundeMitAdresseUndBestellungen>> {
+        this.#logger.debug('findById: id=%d, mitBestellungen=%s', id, mitBestellungen);
 
-        const kunde: KundeMitAdresse | null =
+        const include = mitBestellungen
+            ? this.#includeAdresseUndBestellungen
+            : this.#includeAdresse;
+
+        const kunde: KundeMitAdresseUndBestellungen | null =
             await prismaClient.kunde.findUnique({
                 where: { id },
-                include: this.#includeAdresse,
+                include,
             });
         if (kunde === null) {
             this.#logger.debug('Kein Kunde mit der ID %d gefunden', id);
