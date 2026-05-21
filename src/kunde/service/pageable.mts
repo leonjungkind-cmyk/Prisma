@@ -10,8 +10,8 @@ export type Pageable = {
 };
 
 export type PageableProps = {
-    readonly number?: string;
-    readonly size?: string;
+    readonly number?: string | undefined;
+    readonly size?: string | undefined;
 };
 
 // Pageable-Objekt aus Query-Parametern erstellen
