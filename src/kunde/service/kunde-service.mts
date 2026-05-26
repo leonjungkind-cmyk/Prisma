@@ -40,7 +40,11 @@ export class KundeService {
         id,
         mitBestellungen,
     }: FindByIdParams): Promise<Readonly<KundeMitAdresseUndBestellungen>> {
-        this.#logger.debug('findById: id=%d, mitBestellungen=%s', id, mitBestellungen);
+        this.#logger.debug(
+            'findById: id=%d, mitBestellungen=%s',
+            id,
+            mitBestellungen,
+        );
 
         const include = mitBestellungen
             ? this.#includeAdresseUndBestellungen

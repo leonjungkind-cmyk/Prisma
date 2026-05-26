@@ -27,7 +27,10 @@ router.get('/:id', async (c) => {
     }
 
     // Bestellungen immer mitladen
-    const kunde = await kundeService.findById({ id: idNumber, mitBestellungen: true });
+    const kunde = await kundeService.findById({
+        id: idNumber,
+        mitBestellungen: true,
+    });
 
     // ETag für Caching
     const ifNonMatch = req.header('If-None-Match');

@@ -6,8 +6,4 @@ export type Suchparameter = {
 };
 
 // Gültige Namen für die Suchparameter
-export const suchparameterNamen = [
-    'nachname',
-    'email',
-    'username',
-];
+export const suchparameterNamen = ['nachname', 'email', 'username'];
