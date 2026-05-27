@@ -3,13 +3,8 @@ import { Hono } from 'hono';
 import { container } from '../../container.mts';
 import { getLogger } from '../../logger/logger.mts';
 import { createBaseUrl } from './create-base-url.mts';
-import {
-    KundeNeuSchema,
-    type KundeNeuType,
-} from './kunde-validation.mts';
-import {
-    type KundeCreate,
-} from '../service/kunde-write-service.mts';
+import { KundeNeuSchema, type KundeNeuType } from './kunde-validation.mts';
+import { type KundeCreate } from '../service/kunde-write-service.mts';
 
 const { kundeWriteService } = container;
 
@@ -17,9 +12,7 @@ export const router = new Hono();
 
 const logger = getLogger('kunde-write-router', 'file');
 
-const kundeDtoToKundeCreateInput = (
-    kundeDTO: KundeNeuType,
-): KundeCreate => {
+const kundeDtoToKundeCreateInput = (kundeDTO: KundeNeuType): KundeCreate => {
     const kunde: KundeCreate = {
         version: 0,
         nachname: kundeDTO.nachname,
