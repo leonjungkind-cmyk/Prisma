@@ -1,0 +1,38 @@
+info:
+  name: Neuer Kunde
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/rest"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "nachname": "Muell",
+        "email": "maxi.muell@gmail.com",
+        "username": "mueller12",
+        "adresse": {
+          "strasse": "Hauptstrasse",
+          "hausnummer": "1",
+          "plz": "76133",
+          "ort": "Karlsruhe"
+        },
+        "bestellungen": [
+          {
+            "produktname": "Laptop",
+            "menge": 2
+          }
+        ]
+      }
+  auth: none
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

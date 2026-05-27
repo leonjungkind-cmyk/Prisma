@@ -1,0 +1,9 @@
+opencollection: 1.0.0
+
+info:
+  name: kunde
+
+request:
+  variables:
+    - name: baseUrl
+      value: https://localhost:3000

@@ -11,6 +11,7 @@ import { router as devRouter } from './config/dev/dev-router.mts';
 import { env } from './config/env.mts';
 import { paths } from './config/paths.mts';
 import { router } from './kunde/router/kunde-router.mts';
+import { router as kundeWriteRouter } from './kunde/router/kunde-write-router.mts';
 import { NotFoundError } from './kunde/service/errors.mts';
 import { getLogger } from './logger/logger.mts';
 
@@ -31,6 +32,7 @@ const securityHeaders = createMiddleware(async (c: Context, next: Next) => {
 app.use(secureHeaders(), cors(corsOptions), securityHeaders, compress());
 
 app.route(paths.rest, router);
+app.route(paths.rest, kundeWriteRouter);
 
 const { NODE_ENV } = env;
 
