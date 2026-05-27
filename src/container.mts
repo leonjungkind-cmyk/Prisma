@@ -1,10 +1,10 @@
 import { KundeService } from './kunde/service/kunde-service.mts';
+import { KundeWriteService } from './kunde/service/kunde-write-service.mts';
 import { DbPopulateService } from './config/dev/db-populate.mts';
-
-const kundeService = new KundeService();
 
 // Zentraler Container für Service-Singletons
 export const container = {
-    kundeService,
+    kundeService: new KundeService(),
+    kundeWriteService: new KundeWriteService(),
     dbPopulateService: new DbPopulateService(),
 };
