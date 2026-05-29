@@ -1,0 +1,38 @@
+info:
+  name: Kunde aktualisieren
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/rest/1005"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "nachname": "MuellerUpdate",
+        "email": "maxi.update1005@gmail.com",
+        "username": "muellerUpdate",
+        "adresse": {
+          "strasse": "Neue Strasse",
+          "hausnummer": "22",
+          "plz": "76133",
+          "ort": "Karlsruhe"
+        },
+        "bestellungen": [
+          {
+            "produktname": "Monitor",
+            "menge": 1
+          }
+        ]
+      }
+  auth: none
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
