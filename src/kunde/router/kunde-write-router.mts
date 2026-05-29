@@ -15,9 +15,7 @@ export const router = new Hono();
 
 const logger = getLogger('kunde-write-router', 'file');
 
-const kundeDtoToKundeCreateInput = (
-    kundeDTO: KundeNeuType,
-): KundeCreate => {
+const kundeDtoToKundeCreateInput = (kundeDTO: KundeNeuType): KundeCreate => {
     const kunde: KundeCreate = {
         version: 0,
         nachname: kundeDTO.nachname,
@@ -66,9 +64,7 @@ router.post('/', async (c) => {
     return c.body(null, 201);
 });
 
-const kundeDtoToKundeUpdateInput = (
-    kundeDTO: KundeNeuType,
-): KundeUpdate => {
+const kundeDtoToKundeUpdateInput = (kundeDTO: KundeNeuType): KundeUpdate => {
     const kunde: KundeUpdate = {
         nachname: kundeDTO.nachname,
         email: kundeDTO.email,
