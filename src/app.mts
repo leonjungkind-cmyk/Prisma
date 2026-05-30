@@ -10,6 +10,7 @@ import { corsOptions } from './config/cors.mts';
 import { router as devRouter } from './config/dev/dev-router.mts';
 import { env } from './config/env.mts';
 import { paths } from './config/paths.mts';
+import { router as authRouter } from './security/auth-router.mts';
 import { router } from './kunde/router/kunde-router.mts';
 import { router as kundeWriteRouter } from './kunde/router/kunde-write-router.mts';
 import { NotFoundError } from './kunde/service/errors.mts';
@@ -33,6 +34,8 @@ app.use(secureHeaders(), cors(corsOptions), securityHeaders, compress());
 
 app.route(paths.rest, router);
 app.route(paths.rest, kundeWriteRouter);
+
+app.route('/auth', authRouter);
 
 const { NODE_ENV } = env;
 
