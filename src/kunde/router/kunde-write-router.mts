@@ -15,6 +15,9 @@ export const router = new Hono();
 
 const logger = getLogger('kunde-write-router', 'file');
 
+// -----------------------------------------------------------------------------
+// N e u   a n l e g e n
+// -----------------------------------------------------------------------------
 const kundeDtoToKundeCreateInput = (kundeDTO: KundeNeuType): KundeCreate => {
     const kunde: KundeCreate = {
         version: 0,
@@ -50,7 +53,6 @@ router.post('/', async (c) => {
     const requestBody = await c.req.json();
 
     const kundeDTO = KundeNeuSchema.parse(requestBody);
-
     logger.debug('post: kundeDTO=%o', kundeDTO);
 
     const kunde = kundeDtoToKundeCreateInput(kundeDTO);
@@ -64,6 +66,9 @@ router.post('/', async (c) => {
     return c.body(null, 201);
 });
 
+// -----------------------------------------------------------------------------
+// A e n d e r n
+// -----------------------------------------------------------------------------
 const kundeDtoToKundeUpdateInput = (kundeDTO: KundeNeuType): KundeUpdate => {
     const kunde: KundeUpdate = {
         nachname: kundeDTO.nachname,
@@ -116,7 +121,6 @@ router.put('/:id', async (c) => {
     const requestBody = await c.req.json();
 
     const kundeDTO = KundeNeuSchema.parse(requestBody);
-
     logger.debug('put: kundeDTO=%o', kundeDTO);
 
     const kunde = kundeDtoToKundeUpdateInput(kundeDTO);
@@ -131,4 +135,23 @@ router.put('/:id', async (c) => {
     c.header('ETag', `"${neueVersion}"`);
 
     return c.body(null, 204);
+});
+
+// -----------------------------------------------------------------------------
+// L o e s c h e n
+// -----------------------------------------------------------------------------
+router.delete('/:id', async (c) => {
+    const id = c.req.param('id') ?? '-1';
+    logger.debug('delete: id=%s', id);
+
+    const idNumber = Number.parseInt(id, 10);
+    const { body } = c;
+
+    if (Number.isNaN(idNumber)) {
+        return body(null, 204);
+    }
+
+    await kundeWriteService.delete(idNumber);
+
+    return body(null, 204);
 });
