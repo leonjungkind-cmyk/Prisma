@@ -69,4 +69,30 @@ export class KundeWriteService {
 
         return kundeUpdated?.version ?? Number.NaN;
     }
+
+    async delete(id: number) {
+        this.#logger.debug('delete: id=%d', id);
+
+        const kunde = await prismaClient.kunde.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (kunde === null) {
+            this.#logger.debug('delete: not found');
+            return false;
+        }
+
+        await prismaClient.$transaction(async (tx) => {
+            await tx.kunde.delete({
+                where: {
+                    id,
+                },
+            });
+        });
+
+        this.#logger.debug('delete');
+        return true;
+    }
 }
