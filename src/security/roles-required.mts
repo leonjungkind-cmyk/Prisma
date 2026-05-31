@@ -60,9 +60,7 @@ const getRollen = (payload: JWTPayload) => {
         throw new ForbiddenError('Keine Rolle im Token enthalten');
     }
 
-    const clientAccess = (
-        resourceAccess as Record<string, unknown>
-    )[clientId];
+    const clientAccess = (resourceAccess as Record<string, unknown>)[clientId];
 
     if (
         clientAccess === null ||
