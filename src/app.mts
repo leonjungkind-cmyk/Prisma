@@ -10,14 +10,20 @@ import { corsOptions } from './config/cors.mts';
 import { router as devRouter } from './config/dev/dev-router.mts';
 import { env } from './config/env.mts';
 import { paths } from './config/paths.mts';
-import { router as authRouter } from './security/auth-router.mts';
 import { router } from './kunde/router/kunde-router.mts';
 import { router as kundeWriteRouter } from './kunde/router/kunde-write-router.mts';
 import { NotFoundError } from './kunde/service/errors.mts';
 import { getLogger } from './logger/logger.mts';
+import {
+    createProblemDetails,
+    forbidden,
+    unauthorized,
+    unprocessableContent,
+} from './problem-details.mts';
+import { router as authRouter } from './security/auth-router.mts';
+import { ForbiddenError, UnauthorizedError } from './security/errors.mts';
 
 const INTERNAL_SERVER_ERROR = 500;
-const UNPROCESSABLE_CONTENT = 422;
 
 export const app = new Hono();
 
@@ -54,15 +60,19 @@ app.onError((error, c) => {
     }
 
     if (error instanceof ZodError) {
-        return c.json(
-            {
-                status: UNPROCESSABLE_CONTENT,
-                title: 'Unprocessable Content',
-                detail: 'Die Anfrage enthält ungültige Daten.',
-                issues: error.issues,
-            },
-            UNPROCESSABLE_CONTENT,
+        return createProblemDetails(
+            c,
+            unprocessableContent,
+            'Die Anfrage enthält ungültige Daten.',
         );
+    }
+
+    if (error instanceof UnauthorizedError) {
+        return createProblemDetails(c, unauthorized, error.message);
+    }
+
+    if (error instanceof ForbiddenError) {
+        return createProblemDetails(c, forbidden, error.message);
     }
 
     logger.error('Interner Fehler: %o', error);

@@ -6,10 +6,7 @@ info:
 http:
   method: DELETE
   url: "{{baseUrl}}/rest/1005"
+  headers:
+    - name: Authorization
+      value: "Bearer {{accessToken}}"
   auth: none
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
