@@ -7,19 +7,16 @@ import {
     InternalServerError,
     UnauthorizedError,
 } from './errors.mts';
+import { keycloakConfig } from '../config/keycloak.mts';
 import { getLogger } from '../logger/logger.mts';
 
 const logger = getLogger('roles-required', 'file');
 
 type Rolle = 'admin' | 'user';
 
-const ISSUER = 'https://localhost:8843/realms/javascript';
-const JWKS_URI =
-    'https://localhost:8843/realms/javascript/protocol/openid-connect/certs';
-const CLIENT_ID = 'javascript-client';
-const AUDIENCE = 'account';
+const { issuer, jwksUri, clientId, audience } = keycloakConfig;
 
-const jwks = createRemoteJWKSet(new URL(JWKS_URI));
+const jwks = createRemoteJWKSet(new URL(jwksUri));
 
 const getToken = (req: HonoRequest) => {
     const auth = req.header('Authorization');
@@ -37,8 +34,8 @@ const getToken = (req: HonoRequest) => {
 const verifyToken = async (token: string) => {
     try {
         return await jwtVerify(token, jwks, {
-            issuer: ISSUER,
-            audience: AUDIENCE,
+            issuer,
+            audience,
         });
     } catch (err) {
         logger.debug('verifyToken: err=%o', err as object);
@@ -58,14 +55,14 @@ const getRollen = (payload: JWTPayload) => {
         resourceAccess === undefined ||
         resourceAccess === null ||
         typeof resourceAccess !== 'object' ||
-        !(CLIENT_ID in resourceAccess)
+        !(clientId in resourceAccess)
     ) {
         throw new ForbiddenError('Keine Rolle im Token enthalten');
     }
 
     const clientAccess = (
         resourceAccess as Record<string, unknown>
-    )[CLIENT_ID];
+    )[clientId];
 
     if (
         clientAccess === null ||
