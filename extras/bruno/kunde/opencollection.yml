@@ -3,7 +3,49 @@ opencollection: 1.0.0
 info:
   name: kunde
 
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
 request:
   variables:
     - name: baseUrl
       value: https://localhost:3000
+
+    - name: keycloakUrl
+      value: https://localhost:8843
+
+    - name: realm
+      value: javascript
+
+    - name: realmUrl
+      value: "{{keycloakUrl}}/realms/{{realm}}"
+
+    - name: oidcUrl
+      value: "{{realmUrl}}/protocol/openid-connect"
+
+    - name: oidcTokenUrl
+      value: "{{oidcUrl}}/token"
+
+    - name: oidcAuthUrl
+      value: "{{oidcUrl}}/auth"
+
+    - name: clientId
+      value: javascript-client
+
+    - name: clientSecret
+      value: wBqRFLUIAHQYVu1ZwhHXHhqKniCuBk0i
+
+    - name: username
+      value: admin
+
+    - name: password
+      value: p

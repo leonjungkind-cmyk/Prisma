@@ -1,8 +1,8 @@
 import { getLogger } from '../logger/logger.mts';
 
 const KEYCLOAK_URL = 'http://localhost:8880';
-const REALM = 'kunde';
-const CLIENT_ID = 'kunde-client';
+const REALM = 'javascript';
+const CLIENT_ID = 'javascript-client';
 
 type TokenResponse = {
     access_token: string;
