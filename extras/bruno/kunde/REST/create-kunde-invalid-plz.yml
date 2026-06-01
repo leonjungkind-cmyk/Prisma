@@ -1,7 +1,7 @@
 info:
-  name: Neuer Kunde
+  name: Neuer Kunde - Invalid PLZ
   type: http
-  seq: 1
+  seq: 5
 
 http:
   method: POST
@@ -16,12 +16,12 @@ http:
     data: |-
       {
         "nachname": "Muell",
-        "email": "maxi.muell2001@gmail.com",
-        "username": "mueller2001",
+        "email": "maxi.invalidplz@gmail.com",
+        "username": "muellerInvalidPlz",
         "adresse": {
           "strasse": "Hauptstrasse",
           "hausnummer": "1",
-          "plz": "76133",
+          "plz": "7613",
           "ort": "Karlsruhe"
         },
         "bestellungen": [

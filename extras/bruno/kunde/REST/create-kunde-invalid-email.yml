@@ -1,7 +1,7 @@
 info:
-  name: Neuer Kunde
+  name: Neuer Kunde - Invalid Email
   type: http
-  seq: 1
+  seq: 4
 
 http:
   method: POST
@@ -16,8 +16,8 @@ http:
     data: |-
       {
         "nachname": "Muell",
-        "email": "maxi.muell2001@gmail.com",
-        "username": "mueller2001",
+        "email": "keine-email",
+        "username": "muellerInvalid",
         "adresse": {
           "strasse": "Hauptstrasse",
           "hausnummer": "1",

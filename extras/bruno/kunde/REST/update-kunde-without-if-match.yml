@@ -1,11 +1,11 @@
 info:
-  name: Neuer Kunde
+  name: Kunde aktualisieren - Ohne If-Match
   type: http
-  seq: 1
+  seq: 7
 
 http:
-  method: POST
-  url: "{{baseUrl}}/rest"
+  method: PUT
+  url: "{{baseUrl}}/rest/1005"
   headers:
     - name: Content-Type
       value: application/json
@@ -15,19 +15,19 @@ http:
     type: json
     data: |-
       {
-        "nachname": "Muell",
-        "email": "maxi.muell2001@gmail.com",
-        "username": "mueller2001",
+        "nachname": "MuellerUpdate",
+        "email": "maxi.update-ohne-ifmatch@gmail.com",
+        "username": "muellerUpdate",
         "adresse": {
-          "strasse": "Hauptstrasse",
-          "hausnummer": "1",
+          "strasse": "Neue Strasse",
+          "hausnummer": "22",
           "plz": "76133",
           "ort": "Karlsruhe"
         },
         "bestellungen": [
           {
-            "produktname": "Laptop",
-            "menge": 2
+            "produktname": "Monitor",
+            "menge": 1
           }
         ]
       }
