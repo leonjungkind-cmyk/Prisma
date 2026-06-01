@@ -22,3 +22,13 @@ export class VersionOutdatedError extends Error {
         this.version = version;
     }
 }
+
+// Bereits existierende E-Mail-Adresse beim Anlegen oder Aendern
+export class EmailExistsError extends Error {
+    readonly email: string | undefined;
+
+    constructor(email: string | undefined) {
+        super(`Die E-Mail-Adresse ${email} existiert bereits.`);
+        this.email = email;
+    }
+}

@@ -1,10 +1,19 @@
 import { Hono } from 'hono';
 
 import { container } from '../../container.mts';
+import {
+    createProblemDetails,
+    preconditionRequired,
+} from '../../problem-details.mts';
 import { getLogger } from '../../logger/logger.mts';
 import { rolesRequired } from '../../security/roles-required.mts';
 import { createBaseUrl } from './create-base-url.mts';
-import { KundeNeuSchema, type KundeNeuType } from './kunde-validation.mts';
+import {
+    KundeNeuSchema,
+    type KundeNeuType,
+    KundeUpdateSchema,
+    type KundeUpdateType,
+} from './kunde-validation.mts';
 import {
     type KundeCreate,
     type KundeUpdate,
@@ -15,8 +24,6 @@ const { kundeWriteService } = container;
 export const router = new Hono();
 
 const logger = getLogger('kunde-write-router', 'file');
-
-const admin = 'admin';
 
 // -----------------------------------------------------------------------------
 // N e u   a n l e g e n
@@ -52,7 +59,7 @@ const kundeDtoToKundeCreateInput = (kundeDTO: KundeNeuType): KundeCreate => {
     return kunde;
 };
 
-router.post('/', rolesRequired(admin), async (c) => {
+router.post('/', rolesRequired('admin', 'user'), async (c) => {
     const requestBody = await c.req.json();
 
     const kundeDTO = KundeNeuSchema.parse(requestBody);
@@ -72,7 +79,9 @@ router.post('/', rolesRequired(admin), async (c) => {
 // -----------------------------------------------------------------------------
 // A e n d e r n
 // -----------------------------------------------------------------------------
-const kundeDtoToKundeUpdateInput = (kundeDTO: KundeNeuType): KundeUpdate => {
+const kundeDtoToKundeUpdateInput = (
+    kundeDTO: KundeUpdateType,
+): KundeUpdate => {
     const kunde: KundeUpdate = {
         nachname: kundeDTO.nachname,
         email: kundeDTO.email,
@@ -111,7 +120,7 @@ const kundeDtoToKundeUpdateInput = (kundeDTO: KundeNeuType): KundeUpdate => {
     return kunde;
 };
 
-router.put('/:id', rolesRequired(admin), async (c) => {
+router.put('/:id', rolesRequired('admin', 'user'), async (c) => {
     const id = c.req.param('id') ?? '-1';
     logger.debug('put: id=%s', id);
 
@@ -121,9 +130,19 @@ router.put('/:id', rolesRequired(admin), async (c) => {
         return c.notFound();
     }
 
+    const version = c.req.header('If-Match');
+
+    if (version === undefined) {
+        return createProblemDetails(
+            c,
+            preconditionRequired,
+            'Header "If-Match" fehlt.',
+        );
+    }
+
     const requestBody = await c.req.json();
 
-    const kundeDTO = KundeNeuSchema.parse(requestBody);
+    const kundeDTO = KundeUpdateSchema.parse(requestBody);
     logger.debug('put: kundeDTO=%o', kundeDTO);
 
     const kunde = kundeDtoToKundeUpdateInput(kundeDTO);
@@ -131,6 +150,7 @@ router.put('/:id', rolesRequired(admin), async (c) => {
     const neueVersion = await kundeWriteService.update({
         id: idNumber,
         kunde,
+        version,
     });
 
     logger.debug('put: neueVersion=%d', neueVersion);
@@ -143,7 +163,7 @@ router.put('/:id', rolesRequired(admin), async (c) => {
 // -----------------------------------------------------------------------------
 // L o e s c h e n
 // -----------------------------------------------------------------------------
-router.delete('/:id', rolesRequired(admin), async (c) => {
+router.delete('/:id', rolesRequired('admin'), async (c) => {
     const id = c.req.param('id') ?? '-1';
     logger.debug('delete: id=%s', id);
 
