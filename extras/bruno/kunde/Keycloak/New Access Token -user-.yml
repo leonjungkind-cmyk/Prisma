@@ -22,7 +22,11 @@ http:
         value: "{{clientId}}"
       - name: client_secret
         value: "{{clientSecret}}"
-  auth: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: bru.setEnvVar("accessToken", res.body.access_token);
 
 settings:
   encodeUrl: true
