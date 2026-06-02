@@ -1,0 +1,4 @@
+name: kunde
+variables:
+  - name: accessToken
+    value: ""

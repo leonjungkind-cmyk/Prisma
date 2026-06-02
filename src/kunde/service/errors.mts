@@ -1,9 +1,49 @@
-// Fehlerklassen für die Kundenverwaltung
+// oxlint-disable max-classes-per-file
+// Copyright (C) 2016 - present Juergen Zimmermann, Hochschule Karlsruhe
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// Kein Kunde mit der gesuchten ID gefunden
+/**
+ * Das Modul besteht aus den Klassen für die Fehlerbehandlung bei der Verwaltung
+ * von Kunden, z.B. beim DB-Zugriff.
+ * @packageDocumentation
+ */
+
+/**
+ * Error-Klasse für einen nicht gefundenen Kunden.
+ */
 export class NotFoundError extends Error {}
 
-// Ungültige Versionsnummer beim Ändern
+/**
+ * Error-Klasse für eine bereits existierende E-Mail-Adresse.
+ */
+export class EmailExistsError extends Error {
+    readonly email: string | undefined;
+
+    constructor(email: string | undefined) {
+        super(`Die E-Mail-Adresse ${email} existiert bereits.`);
+        this.email = email;
+    }
+}
+
+/**
+ * Error-Klasse für einen bereits existierenden Benutzernamen.
+ */
+export class UsernameExistsError extends Error {
+    readonly username: string | null | undefined;
+
+    constructor(username: string | null | undefined) {
+        super(`Der Benutzername ${username} existiert bereits.`);
+        this.username = username;
+    }
+}
+
+/**
+ * Error-Klasse für eine ungültige Versionsnummer beim Ändern.
+ */
 export class VersionInvalidError extends Error {
     readonly version: string | undefined;
 
@@ -13,7 +53,9 @@ export class VersionInvalidError extends Error {
     }
 }
 
-// Veraltete Versionsnummer beim Ändern
+/**
+ * Error-Klasse für eine veraltete Versionsnummer beim Ändern.
+ */
 export class VersionOutdatedError extends Error {
     readonly version: number;
 
