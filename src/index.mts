@@ -31,6 +31,7 @@ await banner();
 process.on('SIGINT', () => {
     (async () => {
         await disconnectDB();
+        console.log('Der Server wird heruntergefahren.');
+        process.exit(0);
     })();
-    console.log('Der Server wird heruntergefahren.');
 });
