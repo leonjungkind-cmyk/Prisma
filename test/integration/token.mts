@@ -11,10 +11,8 @@ export const getToken = async (
     // Zugangsdaten als Form-Daten senden
     const response = await fetch(tokenURL, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `username=${username}&password=${password}`,
+        body: JSON.stringify({ username, password }),
+        headers: { 'Content-Type': 'application/json' },
     });
 
     if (!response.ok) {
