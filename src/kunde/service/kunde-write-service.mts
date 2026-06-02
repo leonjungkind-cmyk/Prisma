@@ -4,6 +4,7 @@ import { getLogger } from '../../logger/logger.mts';
 import {
     EmailExistsError,
     NotFoundError,
+    UsernameExistsError,
     VersionInvalidError,
     VersionOutdatedError,
 } from './errors.mts';
@@ -120,14 +121,26 @@ export class KundeWriteService {
     async #validateCreate(kunde: KundeCreate) {
         this.#logger.debug('#validateCreate: email=%s', kunde.email);
 
-        const anzahl = await prismaClient.kunde.count({
+        const anzahlEmail = await prismaClient.kunde.count({
             where: {
                 email: kunde.email,
             },
         });
 
-        if (anzahl > 0) {
+        if (anzahlEmail > 0) {
             throw new EmailExistsError(kunde.email);
+        }
+
+        if (kunde.username !== null && kunde.username !== undefined) {
+            const anzahlUsername = await prismaClient.kunde.count({
+                where: {
+                    username: kunde.username,
+                },
+            });
+
+            if (anzahlUsername > 0) {
+                throw new UsernameExistsError(kunde.username);
+            }
         }
     }
 
@@ -163,7 +176,7 @@ export class KundeWriteService {
         }
 
         if (typeof kunde.email === 'string') {
-            const anzahl = await prismaClient.kunde.count({
+            const anzahlEmail = await prismaClient.kunde.count({
                 where: {
                     email: kunde.email,
                     NOT: {
@@ -172,8 +185,23 @@ export class KundeWriteService {
                 },
             });
 
-            if (anzahl > 0) {
+            if (anzahlEmail > 0) {
                 throw new EmailExistsError(kunde.email);
+            }
+        }
+
+        if (typeof kunde.username === 'string') {
+            const anzahlUsername = await prismaClient.kunde.count({
+                where: {
+                    username: kunde.username,
+                    NOT: {
+                        id,
+                    },
+                },
+            });
+
+            if (anzahlUsername > 0) {
+                throw new UsernameExistsError(kunde.username);
             }
         }
     }

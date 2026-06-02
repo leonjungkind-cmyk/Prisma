@@ -12,11 +12,19 @@ import { env } from './config/env.mts';
 import { paths } from './config/paths.mts';
 import { router } from './kunde/router/kunde-router.mts';
 import { router as kundeWriteRouter } from './kunde/router/kunde-write-router.mts';
-import { NotFoundError } from './kunde/service/errors.mts';
+import {
+    EmailExistsError,
+    NotFoundError,
+    UsernameExistsError,
+    VersionInvalidError,
+    VersionOutdatedError,
+} from './kunde/service/errors.mts';
 import { getLogger } from './logger/logger.mts';
 import {
+    badRequest,
     createProblemDetails,
     forbidden,
+    preconditionFailed,
     unauthorized,
     unprocessableContent,
 } from './problem-details.mts';
@@ -65,6 +73,22 @@ app.onError((error, c) => {
             unprocessableContent,
             'Die Anfrage enthält ungültige Daten.',
         );
+    }
+
+    if (error instanceof EmailExistsError) {
+        return createProblemDetails(c, badRequest, error.message);
+    }
+
+    if (error instanceof UsernameExistsError) {
+        return createProblemDetails(c, badRequest, error.message);
+    }
+
+    if (error instanceof VersionInvalidError) {
+        return createProblemDetails(c, badRequest, error.message);
+    }
+
+    if (error instanceof VersionOutdatedError) {
+        return createProblemDetails(c, preconditionFailed, error.message);
     }
 
     if (error instanceof UnauthorizedError) {
