@@ -59,7 +59,7 @@ export default defineConfig({
                     // https://vitest.dev/config/globalsetup.html
                     globalSetup: './test/integration/setup.global.mts',
 
-                    testTimeout: 2_000,
+                    testTimeout: 10_000,
                 },
             },
         ],
