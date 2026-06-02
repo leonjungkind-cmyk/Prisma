@@ -92,7 +92,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260514.1",
     "@vitest/coverage-v8": "4.1.6",
     "@vitest/eslint-plugin": "1.6.17",
-    "@vitest/ui": "4.1.6",
+    "@vitest/ui": "4.1.7",
     "asciidoctor-kroki": "0.18.1",
     "effect": "3.21.2",
     "eslint": "10.4.0",
