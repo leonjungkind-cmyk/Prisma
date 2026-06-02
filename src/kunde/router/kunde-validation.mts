@@ -4,7 +4,10 @@ const AdresseSchema = z
     .object({
         strasse: z.string().trim().min(1),
         hausnummer: z.string().trim().min(1),
-        plz: z.string().trim().regex(/^\d{5}$/u),
+        plz: z
+            .string()
+            .trim()
+            .regex(/^\d{5}$/u),
         ort: z.string().trim().min(1),
     })
     .strict();

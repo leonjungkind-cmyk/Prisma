@@ -144,11 +144,7 @@ export class KundeWriteService {
         }
     }
 
-    async #validateUpdate(
-        id: number,
-        kunde: KundeUpdate,
-        versionStr: string,
-    ) {
+    async #validateUpdate(id: number, kunde: KundeUpdate, versionStr: string) {
         this.#logger.debug(
             '#validateUpdate: id=%d, versionStr=%s',
             id,

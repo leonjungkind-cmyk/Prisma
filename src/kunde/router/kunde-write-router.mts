@@ -79,9 +79,7 @@ router.post('/', rolesRequired('admin', 'user'), async (c) => {
 // -----------------------------------------------------------------------------
 // A e n d e r n
 // -----------------------------------------------------------------------------
-const kundeDtoToKundeUpdateInput = (
-    kundeDTO: KundeUpdateType,
-): KundeUpdate => {
+const kundeDtoToKundeUpdateInput = (kundeDTO: KundeUpdateType): KundeUpdate => {
     const kunde: KundeUpdate = {
         nachname: kundeDTO.nachname,
         email: kundeDTO.email,
