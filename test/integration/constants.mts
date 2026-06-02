@@ -1,6 +1,7 @@
 import { paths } from '../../src/config/paths.mts';
 import { serverConfig } from '../../src/config/server.mts';
 
+// Gemeinsame URLs und IDs fuer die Integrationstests
 export const baseURL = `https://localhost:${serverConfig.port}`;
 export const restURL = new URL(paths.rest, baseURL).toString();
 export const authURL = new URL(paths.auth, baseURL).toString();

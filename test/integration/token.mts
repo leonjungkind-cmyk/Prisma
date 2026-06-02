@@ -8,12 +8,13 @@ export const getToken = async (
     username: string = adminCredentials.username,
     password: string = adminCredentials.password,
 ) => {
+    // Zugangsdaten als Form-Daten senden
     const response = await fetch(tokenURL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ username, password }),
+        body: `username=${username}&password=${password}`,
     });
 
     if (!response.ok) {
