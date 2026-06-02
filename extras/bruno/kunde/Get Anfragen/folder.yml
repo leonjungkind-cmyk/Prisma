@@ -1,0 +1,7 @@
+info:
+  name: Get Anfragen
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
