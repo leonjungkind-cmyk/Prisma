@@ -5,13 +5,13 @@ info:
 
 http:
   method: GET
-  url: https://localhost:3000/rest?page=2&size=3
+  url: https://localhost:3000/rest?page=2&size=8
   params:
     - name: page
       value: "2"
       type: query
     - name: size
-      value: "3"
+      value: "8"
       type: query
   auth: inherit
 
