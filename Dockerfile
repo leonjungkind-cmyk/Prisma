@@ -47,6 +47,7 @@ EOF
 FROM dhi.io/bun:${BUN_VERSION}-debian13 AS final
 
 WORKDIR /opt/app
+RUN ["/bin/bash", "-c", "mkdir -p /opt/app/log && chown nonroot:nonroot /opt/app/log"]
 
 USER nonroot
 
