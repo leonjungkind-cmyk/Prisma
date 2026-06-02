@@ -1,0 +1,22 @@
+info:
+  name: GET mit Paging
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: https://localhost:3000/rest?page=2&size=3
+  params:
+    - name: page
+      value: "2"
+      type: query
+    - name: size
+      value: "3"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
