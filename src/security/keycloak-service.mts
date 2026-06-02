@@ -1,8 +1,7 @@
 import { getLogger } from '../logger/logger.mts';
+import { keycloakConfig } from '../config/keycloak.mts';
 
-const KEYCLOAK_URL = 'http://localhost:8880';
-const REALM = 'javascript';
-const CLIENT_ID = 'javascript-client';
+const { accessTokenUrl, clientId, secret } = keycloakConfig;
 
 type TokenResponse = {
     access_token: string;
@@ -20,7 +19,7 @@ export class KeycloakService {
         this.#logger.debug('token: username=%s', username);
 
         const response = await fetch(
-            `${KEYCLOAK_URL}/realms/${REALM}/protocol/openid-connect/token`,
+            accessTokenUrl,
             {
                 method: 'POST',
                 headers: {
@@ -28,7 +27,8 @@ export class KeycloakService {
                 },
                 body: new URLSearchParams({
                     grant_type: 'password',
-                    client_id: CLIENT_ID,
+                    client_id: clientId,
+                    client_secret: secret,
                     username,
                     password,
                 }),
