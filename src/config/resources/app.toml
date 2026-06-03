@@ -40,7 +40,6 @@ port = 8843
 # L o g g i n g
 # ==============================================================================
 [log]
-dir = "./log"
 # Auskommentieren fuer Lasttests
 level = "debug"
 pretty = true
