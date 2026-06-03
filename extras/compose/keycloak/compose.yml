@@ -69,6 +69,7 @@ services:
       KC_HTTPS_PROTOCOLS: "TLSv1.3"
       KC_HTTP_ENABLED: true
       # https://www.keycloak.org/server/all-config#category-hostname_v2
+      KC_HOSTNAME: localhost
       KC_HOSTNAME_STRICT: false
 
       # https://www.keycloak.org/server/all-config#category-database

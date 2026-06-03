@@ -2,7 +2,7 @@ import { getLogger } from '../logger/logger.mts';
 
 const logger = getLogger('config/keycloak', 'file');
 
-const KEYCLOAK_HTTP_URL = 'http://localhost:8880';
+const KEYCLOAK_HTTP_URL = 'http://host.docker.internal:8880';
 const KEYCLOAK_HTTPS_URL = 'https://localhost:8843';
 const REALM = 'javascript';
 const CLIENT_ID = 'javascript-client';
