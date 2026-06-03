@@ -15,13 +15,13 @@ http:
       - name: grant_type
         value: password
       - name: username
-        value: "{{username}}"
+        value: admin
       - name: password
-        value: "{{password}}"
+        value: p
       - name: client_id
-        value: "{{clientId}}"
+        value: javascript-client
       - name: client_secret
-        value: "{{clientSecret}}"
+        value: Dv6hrjs5OWg4krSffeLz3UU7Igp695QD
 
 runtime:
   scripts:
