@@ -6,7 +6,6 @@ import { type Page } from '../../../src/kunde/router/page.mts';
 
 describe('GET /rest mit Query-Parametern', () => {
     test('GET /rest liefert alle Kunden als Page', async () => {
-        // Grundabfrage ohne Filter
         const response = await fetch(restURL, {
             headers: {
                 Accept: 'application/json',
@@ -25,7 +24,6 @@ describe('GET /rest mit Query-Parametern', () => {
     });
 
     test('GET /rest?nachname=Schmidt findet Kunden nach Nachname', async () => {
-        // Filter nach Nachname
         const response = await fetch(`${restURL}?nachname=Schmidt`, {
             headers: {
                 Accept: 'application/json',
@@ -42,9 +40,10 @@ describe('GET /rest mit Query-Parametern', () => {
         ).toBe(true);
     });
 
-    test('GET /rest?email=mueller@example.de findet Kunden nach E-Mail', async () => {
-        // Exakte E-Mail-Suche
-        const response = await fetch(`${restURL}?email=mueller@example.de`, {
+    test('GET /rest?email=maxi.update1005@gmail.com findet Kunden nach E-Mail', async () => {
+        const email = 'maxi.update1005@gmail.com';
+
+        const response = await fetch(`${restURL}?email=${email}`, {
             headers: {
                 Accept: 'application/json',
             },
@@ -55,9 +54,7 @@ describe('GET /rest mit Query-Parametern', () => {
         const body = (await response.json()) as Page<KundeMitAdresse>;
 
         expect(body.content.length).toBeGreaterThan(0);
-        expect(
-            body.content.every((kunde) => kunde.email === 'mueller@example.de'),
-        ).toBe(true);
+        expect(body.content.every((kunde) => kunde.email === email)).toBe(true);
     });
 
     test('GET /rest?foo=bar liefert 404', async () => {

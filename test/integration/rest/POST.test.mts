@@ -2,7 +2,10 @@ import { randomUUID } from 'node:crypto';
 
 import { describe, expect, test } from 'vitest';
 
-import { type KundeNeuType, KundeNeuSchema } from '../../../src/kunde/router/kunde-validation.mts';
+import {
+    type KundeNeuType,
+    KundeNeuSchema,
+} from '../../../src/kunde/router/kunde-validation.mts';
 import { KundeService } from '../../../src/kunde/service/kunde-service.mts';
 import { getToken } from '../token.mts';
 import { restURL } from '../constants.mts';
@@ -27,7 +30,6 @@ const createBody = (suffix: string): KundeNeuType => ({
 
 describe('POST /rest', () => {
     test('POST /rest ohne Token liefert 401', async () => {
-        // Ohne Authentifizierung darf kein Kunde angelegt werden
         const response = await fetch(restURL, {
             method: 'POST',
             headers: {
@@ -40,7 +42,6 @@ describe('POST /rest', () => {
     });
 
     test('POST /rest mit gueltigem Token legt einen Kunden an', async () => {
-        // Admin-Token fuer die Schreiboperation holen
         const token = await getToken();
         const body = createBody(randomUUID());
 
@@ -57,7 +58,7 @@ describe('POST /rest', () => {
 
         const location = response.headers.get('location');
 
-        expect(location).toMatch(/^https:\/\/localhost:3000\/rest\/\d+$/u);
+        expect(location).toMatch(/^https:\/\/.+:3000\/rest\/\d+$/u);
 
         const id = location?.split('/').at(-1) ?? '';
 
@@ -87,16 +88,17 @@ describe('POST /rest', () => {
             username: '',
         };
 
-        // Zod muss dieselben Pflichtfelder wie die API pruefen
         const parsed = KundeNeuSchema.safeParse(invalidBody);
 
         expect(parsed.success).toBe(false);
 
         const expectedPaths = ['nachname', 'email', 'username'];
-        const issues = (parsed as unknown as {
-            success: false;
-            error: { issues: { path: PropertyKey[] }[] };
-        }).error.issues;
+        const issues = (
+            parsed as unknown as {
+                success: false;
+                error: { issues: { path: PropertyKey[] }[] };
+            }
+        ).error.issues;
 
         expect(issues.map((issue) => String(issue.path[0]))).toStrictEqual(
             expect.arrayContaining(expectedPaths),
@@ -117,7 +119,6 @@ describe('POST /rest', () => {
     });
 
     test('POST /rest mit doppelt verwendeter E-Mail liefert 400', async () => {
-        // Dieselben Daten zweimal speichern muss fehlschlagen
         const token = await getToken();
         const body = createBody(randomUUID());
 

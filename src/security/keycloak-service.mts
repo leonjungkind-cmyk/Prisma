@@ -3,6 +3,11 @@ import { keycloakConfig } from '../config/keycloak.mts';
 
 const { accessTokenUrl, clientId, secret } = keycloakConfig;
 
+export type TokenData = {
+    readonly username: string | undefined;
+    readonly password: string | undefined;
+};
+
 type TokenResponse = {
     access_token: string;
     expires_in: number;
@@ -15,29 +20,30 @@ type TokenResponse = {
 export class KeycloakService {
     readonly #logger = getLogger(KeycloakService.name);
 
-    async token(username: string, password: string) {
+    async token({ username, password }: TokenData) {
         this.#logger.debug('token: username=%s', username);
 
-        const response = await fetch(
-            accessTokenUrl,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    grant_type: 'password',
-                    client_id: clientId,
-                    client_secret: secret,
-                    username,
-                    password,
-                }),
+        if (typeof username !== 'string' || typeof password !== 'string') {
+            return;
+        }
+
+        const response = await fetch(accessTokenUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-        );
+            body: new URLSearchParams({
+                grant_type: 'password',
+                client_id: clientId,
+                client_secret: secret,
+                username,
+                password,
+            }),
+        });
 
         if (!response.ok) {
             this.#logger.debug('token: status=%d', response.status);
-            throw new Error('Token konnte nicht erstellt werden.');
+            return;
         }
 
         return (await response.json()) as TokenResponse;

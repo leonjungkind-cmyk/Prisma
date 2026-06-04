@@ -1,11 +1,29 @@
 import { paths } from '../../src/config/paths.mts';
 import { serverConfig } from '../../src/config/server.mts';
 
-// Gemeinsame URLs und IDs fuer die Integrationstests
-export const baseURL = `https://localhost:${serverConfig.port}`;
-export const restURL = new URL(paths.rest, baseURL).toString();
-export const authURL = new URL(paths.auth, baseURL).toString();
-export const tokenURL = new URL(`${paths.auth}${paths.token}`, baseURL).toString();
+const { host, port } = serverConfig;
+
+export const baseURL = `https://${host}:${port}`;
+
+export const restURL = `${baseURL}${paths.rest}`;
+export const authURL = `${baseURL}${paths.auth}`;
+export const tokenPath = `${paths.auth}${paths.token}`;
+export const tokenURL = `${baseURL}${tokenPath}`;
+
+export const POST = 'POST';
+export const PUT = 'PUT';
+export const DELETE = 'DELETE';
+
+export const ACCEPT = 'Accept';
+export const CONTENT_TYPE = 'Content-Type';
+export const LOCATION = 'Location';
+export const IF_NONE_MATCH = 'If-None-Match';
+export const IF_MATCH = 'If-Match';
+export const AUTHORIZATION = 'Authorization';
+
+export const APPLICATION_JSON = 'application/json';
+export const X_WWW_FORM_URL_ENCODED = 'application/x-www-form-urlencoded';
+export const BEARER = 'Bearer';
 
 export const adminCredentials = {
     username: 'admin',

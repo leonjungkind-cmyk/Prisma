@@ -1,23 +1,39 @@
+import { createProblemDetails, unauthorized } from '../problem-details.mts';
 import { Hono } from 'hono';
 
 import { container } from '../container.mts';
 import { getLogger } from '../logger/logger.mts';
+import { paths } from '../config/paths.mts';
+
+const logger = getLogger('auth-router', 'file');
+const { keycloakService } = container;
+
+export class TokenData {
+    username: string | undefined;
+
+    password: string | undefined;
+}
 
 export const router = new Hono();
 
-const { keycloakService } = container;
+router.post(paths.token, async (c) => {
+    const body: Record<string, string> = await c.req.parseBody();
+    const { username, password } = body;
 
-const logger = getLogger('auth-router', 'file');
+    logger.debug('post: username=%s', username);
 
-router.post('/token', async (c) => {
-    const body = await c.req.json();
+    const result = await keycloakService.token({
+        username,
+        password,
+    });
 
-    logger.debug('token: body=%o', body);
+    if (result === undefined) {
+        return createProblemDetails(
+            c,
+            unauthorized,
+            'Fehler beim Authentifizieren',
+        );
+    }
 
-    const username = body.username as string;
-    const password = body.password as string;
-
-    const token = await keycloakService.token(username, password);
-
-    return c.json(token);
+    return c.json(result);
 });

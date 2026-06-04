@@ -21,7 +21,7 @@ http:
       - name: client_id
         value: javascript-client
       - name: client_secret
-        value: Dv6hrjs5OWg4krSffeLz3UU7Igp695QD
+        value: wBqRFLUIAHQYVu1ZwhHXHhqKniCuBk0i
 
 runtime:
   scripts:

@@ -1,4 +1,11 @@
-import { adminCredentials, tokenURL } from './constants.mts';
+import {
+    CONTENT_TYPE,
+    POST,
+    X_WWW_FORM_URL_ENCODED,
+    baseURL,
+    tokenPath,
+    adminCredentials,
+} from './constants.mts';
 
 type TokenResponse = {
     access_token: string;
@@ -8,17 +15,28 @@ export const getToken = async (
     username: string = adminCredentials.username,
     password: string = adminCredentials.password,
 ) => {
-    // Zugangsdaten als Form-Daten senden
-    const response = await fetch(tokenURL, {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-        headers: { 'Content-Type': 'application/json' },
+    const headers = new Headers();
+    headers.append(CONTENT_TYPE, X_WWW_FORM_URL_ENCODED);
+
+    const response = await fetch(`${baseURL}${tokenPath}`, {
+        method: POST,
+        body: `username=${username}&password=${password}`,
+        headers,
     });
 
-    if (!response.ok) {
-        throw new Error(`Token konnte nicht erstellt werden: ${response.status}`);
+    const body = (await response.json()) as TokenResponse;
+
+    if (
+        response.status !== 200 ||
+        body.access_token === undefined ||
+        typeof body.access_token !== 'string'
+    ) {
+        console.error(`!!!username=${username}, password=${password}`);
+        console.error(`!!!status=${response.status}`);
+        console.error('!!!body=%j', body);
+
+        throw new Error('Statuscode ist nicht 200 oder kein String als Token');
     }
 
-    const tokenResponse = (await response.json()) as TokenResponse;
-    return tokenResponse.access_token;
+    return body.access_token;
 };
