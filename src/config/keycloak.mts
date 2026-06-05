@@ -1,15 +1,19 @@
+import { hostname } from 'node:os';
 import { getLogger } from '../logger/logger.mts';
 
 const logger = getLogger('config/keycloak', 'file');
 
-const KEYCLOAK_HTTP_URL = 'http://host.docker.internal:8880';
-const KEYCLOAK_HTTPS_URL = 'https://localhost:8843';
+// Im Docker-Container ist der Rechnername ein 12-stelliger Hex-String
+const isContainer = /^[0-9a-f]{12}$/u.test(hostname());
+const KEYCLOAK_HOST = isContainer ? 'host.docker.internal' : 'localhost';
+const KEYCLOAK_HTTP_URL = `http://${KEYCLOAK_HOST}:8880`;
+// KC_HOSTNAME=localhost in Keycloak sorgt dafür, dass der "iss"-Claim immer localhost:8880 enthält
+const KEYCLOAK_ISSUER_URL = 'http://localhost:8880';
 const REALM = 'javascript';
 const CLIENT_ID = 'javascript-client';
 
-const issuer = `${KEYCLOAK_HTTPS_URL}/realms/${REALM}`;
+const issuer = `${KEYCLOAK_ISSUER_URL}/realms/${REALM}`;
 const oidcHttpUrl = `${KEYCLOAK_HTTP_URL}/realms/${REALM}/protocol/openid-connect`;
-const oidcHttpsUrl = `${issuer}/protocol/openid-connect`;
 
 export const keycloakConfig = {
     realm: REALM,
@@ -17,7 +21,7 @@ export const keycloakConfig = {
     jwksUri: `${oidcHttpUrl}/certs`,
     clientId: CLIENT_ID,
     audience: ['account'],
-    accessTokenUrl: `${oidcHttpsUrl}/token`,
+    accessTokenUrl: `${oidcHttpUrl}/token`,
     secret:
         process.env['CLIENT_SECRET'] ??
         'ERROR: Umgebungsvariable CLIENT_SECRET nicht gesetzt!',

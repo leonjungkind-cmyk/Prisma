@@ -21,7 +21,7 @@ group "default" {
 }
 
 target "hardened" {
-  tags = ["docker.io/Gruppe8/kunde:2026.4.1-hardened"]
+  tags = ["docker.io/juergenzimmermann/prisma:2026.4.1-hardened"]
   # dockerfile = "Dockerfile"
   # no-cache = true
 }

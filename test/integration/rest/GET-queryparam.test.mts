@@ -40,8 +40,8 @@ describe('GET /rest mit Query-Parametern', () => {
         ).toBe(true);
     });
 
-    test('GET /rest?email=maxi.update1005@gmail.com findet Kunden nach E-Mail', async () => {
-        const email = 'maxi.update1005@gmail.com';
+    test('GET /rest?email=schmidt@example.de findet Kunden nach E-Mail', async () => {
+        const email = 'schmidt@example.de';
 
         const response = await fetch(`${restURL}?email=${email}`, {
             headers: {
