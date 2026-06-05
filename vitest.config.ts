@@ -70,7 +70,7 @@ export default defineConfig({
         // https://vitest.dev/config/api.html
         // Kommando "netsh interface ipv4 show excludedportrange protocol=tcp"
         // -> u.a. WSL2, Docker Desktop, Windows Netzwerk-Stack
-        api: 3001,
+        api: { port: 3001, host: '127.0.0.1' },
 
         // https://vitest.dev/config/bail.html
         bail: 1,
